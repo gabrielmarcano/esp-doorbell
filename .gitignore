@@ -1,0 +1,11 @@
+# Environments
+.env
+.venv
+env/
+venv/
+
+# Configurations
+webrepl_cfg.py
+
+# mpy-cross output
+out/
