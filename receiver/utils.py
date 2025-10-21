@@ -13,6 +13,30 @@ def ring_bell(buzzer):
     buzzer.off()
 
 
+def blink_internal_led(pin):
+    """
+    Manages the internal LED by turning it on and off in a specific pattern.
+    """
+    import time
+
+    pin.on()
+    time.sleep(0.5)
+    pin.off()
+    time.sleep(0.25)
+    pin.on()
+    time.sleep(0.5)
+    pin.off()
+    time.sleep(0.25)
+    pin.on()
+    time.sleep(0.5)
+    pin.off()
+    time.sleep(0.25)
+    pin.on()
+    time.sleep(0.5)
+    pin.off()
+    
+
+
 def make_buzzer_sound(pin):
     """
     Makes a sound using a buzzer
