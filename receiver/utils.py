@@ -1,17 +1,24 @@
-def ring_bell(buzzer):
+def play_chime(buzzer_pin):
     """
-    Rings the buzzer for a short duration.
+    Plays a two-tone 'ding-dong' chime on the passive buzzer.
     """
+    import machine
     import time
-
-    buzzer.on()
-    time.sleep(0.5)
-    buzzer.off()
-    time.sleep(0.1)
-    buzzer.on()
-    time.sleep(0.5)
-    buzzer.off()
-
+    
+    buzzer = machine.PWM(buzzer_pin)
+    
+    # Set the duty cycle (volume). 512 is 50% (range 0-1023)
+    buzzer.duty(512)
+    
+    # Play "Ding" (E5)
+    buzzer.freq(659)
+    time.sleep_ms(200)
+    
+    # Play "Dong" (C5)
+    buzzer.freq(523)
+    time.sleep_ms(300)
+    
+    buzzer.deinit()
 
 def blink_internal_led(pin):
     """
@@ -34,43 +41,3 @@ def blink_internal_led(pin):
     pin.on()
     time.sleep(0.5)
     pin.off()
-    
-
-
-def make_buzzer_sound(pin):
-    """
-    Makes a sound using a buzzer
-    """
-    from machine import PWM
-
-    beeper = PWM(pin, freq=440, duty=512)
-    beeper.deinit()
-
-
-def play_melody(buzzer_pin):
-    """
-    Plays a melody using a buzzer
-    """
-    from machine import PWM
-    import time
-
-    tempo = 5
-    tones = {
-        "c": 262,
-        "d": 294,
-        "e": 330,
-        "f": 349,
-        "g": 392,
-        "a": 440,
-        "b": 494,
-        "C": 523,
-        " ": 0,
-    }
-    beeper = PWM(buzzer_pin, freq=440, duty=512)
-    melody = "cdefgabC"
-    rhythm = [8, 8, 8, 8, 8, 8, 8, 8]
-
-    for tone, length in zip(melody, rhythm):
-        beeper.freq(tones[tone])
-        time.sleep(tempo / length)
-    beeper.deinit()
