@@ -1,6 +1,7 @@
 import network
 import espnow
 import esp
+import binascii
 
 # Replace this with the receiver MAC address
 MAC_STRING = "AA:BB:CC:DD:EE:FF"
@@ -12,6 +13,10 @@ MAC_BYTES = bytes([int(p, 16) for p in MAC_STRING.split(":")])
 nic = network.WLAN(network.WLAN.IF_STA)
 nic.active(True)
 nic.disconnect()  # Because ESP8266 auto-connects to last Access Point
+print("Network is active.")
+mac_bytes = nic.config("mac")
+mac_address_str = binascii.hexlify(mac_bytes, ":").decode().upper()
+print(f"MAC address: {mac_address_str}")
 
 e = espnow.ESPNow()
 e.active(True)
