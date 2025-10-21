@@ -2,6 +2,7 @@ import network
 import espnow
 import esp
 import binascii
+import time
 
 # Replace this with the receiver MAC address
 MAC_STRING = "AA:BB:CC:DD:EE:FF"
@@ -43,4 +44,5 @@ except OSError as err:
 # After sending, go into deep sleep forever.
 # It will only wake up when the RST pin is pulled to GND by the button press.
 print("Going to deep sleep. Press the button to wake up.")
+time.sleep(0.5) # Give time to interrupt in case of trying to access to repl
 esp.deepsleep(0)
