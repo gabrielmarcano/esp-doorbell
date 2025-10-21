@@ -23,7 +23,7 @@
 
 ## Summary
 
-This project implements a doorbell system using two ESP8266 microcontrollers communicating via the ESP-NOW protocol. One ESP8266 acts as a sender, powered by a battery and triggered by a button press. The other ESP8266 acts as a receiver, plugged into a power source and connected to a buzzer. When the sender's button is pressed, it transmits a signal to the receiver, which then activates the buzzer for a short duration (10 seconds), simulating a doorbell ring.
+This project implements a doorbell system using two ESP8266 microcontrollers communicating via the ESP-NOW protocol. One ESP8266 acts as a sender, powered by a battery and triggered by a button press. The other ESP8266 acts as a receiver, plugged into a power source and connected to a buzzer. When the sender's button is pressed, it transmits a signal to the receiver, which then activates the buzzer for a short duration, simulating a doorbell ring.
 
 ## Deployment
 
