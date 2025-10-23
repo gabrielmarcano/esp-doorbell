@@ -1,48 +1,45 @@
 import network
 import espnow
 import esp
-import binascii
 import time
 
-# Replace this with the receiver MAC address
-MAC_STRING = "AA:BB:CC:DD:EE:FF"
+CHANNEL = 3 # Receiver's channel
+MAC_STRING = "AA:BB:CC:DD:EE:FF" # Receiver's MAC 
 
-# The address must be in byte format, so turn the string into a byte sequence that looks like b"\xaa\xbb\xcc\xdd\xee\xff"
-MAC_BYTES = bytes([int(p, 16) for p in MAC_STRING.split(":")])
+# peer in byte format = b"\xaa\xbb\xcc\xdd\xee\xff"
+peer = bytes([int(p, 16) for p in MAC_STRING.split(":")])
 
-# A WLAN interface must be active to send ESP-NOW messages
-nic = network.WLAN(network.WLAN.IF_STA)
-nic.active(True)
-nic.disconnect()  # Because ESP8266 auto-connects to last Access Point
-print("Network is active.")
-mac_bytes = nic.config("mac")
-mac_address_str = binascii.hexlify(mac_bytes, ":").decode().upper()
-print(f"MAC address: {mac_address_str}")
+def wifi_reset():   # Reset wifi to AP_IF off, STA_IF on and disconnected
+  sta = network.WLAN(network.WLAN.IF_STA); sta.active(False)
+  ap = network.WLAN(network.WLAN.IF_AP); ap.active(False)
+  sta.active(True)
+  while not sta.active():
+      time.sleep(0.1)
+  sta.disconnect()   # For ESP8266
+  while sta.isconnected():
+      time.sleep(0.1)
+  return sta, ap
+
+sta, ap = wifi_reset()
+sta.config(channel=CHANNEL)
 
 e = espnow.ESPNow()
 e.active(True)
-
-# Add the receiver as a peer
-try:
-    e.add_peer(MAC_BYTES)
-    print("Receiver peer added successfully.")
-except OSError as e:
-    print("Error adding peer:", e)
+e.add_peer(peer)
 
 # This code runs only ONCE when the ESP8266 boots up.
-print("Woke up. Sending doorbell signal...")
+print("Sending doorbell signal...")
 
 # Send a message to the receiver.
-try:
-    if e.send(MAC_BYTES, b"ring", True):
+if e.send(peer, b"ring", True):
         print("Signal sent successfully!")
-    else:
-        print("Failed to send signal.")
-except OSError as err:
-    print("Error sending message:", err)
+else:
+    print("Failed to send signal.")
 
 # After sending, go into deep sleep forever.
 # It will only wake up when the RST pin is pulled to GND by the button press.
-print("Going to deep sleep. Press the button to wake up.")
-time.sleep(0.5) # Give time to interrupt in case of trying to access to repl
+print("Going to deep sleep.")
+e.active(False)
+sta.active(False) 
+time.sleep(1) # Give time to interrupt in case of trying to access to repl
 esp.deepsleep(0)

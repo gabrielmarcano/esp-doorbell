@@ -1,6 +1,6 @@
 <h1 align="center">ESP Doorbell Project</h1>
 <p align="center">
-  A project to control a doorbell system using two ESP8266
+  A project to control a doorbell system using an ESP8266 and an ESP32
 </p>
 
 <div align="center">
@@ -23,17 +23,21 @@
 
 ## Summary
 
-This project implements a doorbell system using two ESP8266 microcontrollers communicating via the ESP-NOW protocol. One ESP8266 acts as a sender, powered by a battery and triggered by a button press. The other ESP8266 acts as a receiver, plugged into a power source and connected to a buzzer. When the sender's button is pressed, it transmits a signal to the receiver, which then activates the buzzer for a short duration, simulating a doorbell ring.
+This project implements a doorbell system using both ESP8266 and ESP32 microcontrollers that communicate via the ESP-NOW protocol. The ESP8266 acts as the sender, powered by a battery and triggered by a button press. The ESP32 acts as the receiver and proxy, connected to a power source and a WiFi network. When the sender’s button is pressed, it transmits an ESP-NOW packet to the receiver, which then sends a POST request to a Home Assistant webhook. This setup simulates a doorbell ring, allowing Home Assistant to trigger any automation you configure.
 
 ## Deployment
 
-Use `build.py` to **automate the process of preparing, compiling, and deploying your MicroPython code** to an ESP board.
+The ESP8266 and ESP32 microcontrollers were programmed using MicroPython and deployed via the `mpremote` tool. To transfer the main script to the device, the following command was used, specifying the appropriate serial port for each board:
 
-This interactive script streamlines the workflow by guiding you through the following steps:
+```bash
+mpremote connect /dev/cu.usbserial-100 fs cp main.py :
+```
 
-1.  **Project Selection:** It first prompts you to choose whether you want to build the `sender` or the `receiver` code.
-2.  **Code Compilation:** It asks if you want to compile your `.py` files into `.mpy` bytecode using `mpy-cross`. This makes the code run faster and use less memory on the device.
-3.  **Device Upload:** Finally, it asks if you want to upload the prepared files directly to the root directory of your connected ESP board using `mpremote`.
+Change the port to your specific device. See the list of connected devices with:
+
+```bash
+mpremote connect list
+```
 
 ## Wiring
 
@@ -44,26 +48,19 @@ This interactive script streamlines the workflow by guiding you through the foll
 | RST     | +      |
 | GND     | \-     |
 
-### Receiver
-
-| ESP8266 | BUZZER |
-| ------- | ------ |
-| GPIO14  | +      |
-| GND     | \-     |
-
 ## Resources
+
+### MicroPython
+
+Implementation of the Python 3 programming language optimised to run on microcontrollers.
+
+https://docs.micropython.org/en/latest/
 
 ### ESP-NOW
 
 MicroPython ESP-NOW protocol library for ESP devices.
 
 https://docs.micropython.org/en/latest/library/espnow.html
-
-### mpy-cross
-
-MicroPython cross compiler utility, used to pre-compile python files into [mpy files](https://docs.micropython.org/en/latest/reference/mpyfiles.html).
-
-https://pypi.org/project/mpy-cross/
 
 ### mpremote
 
