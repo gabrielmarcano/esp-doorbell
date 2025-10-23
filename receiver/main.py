@@ -27,8 +27,6 @@ while not sta.isconnected():  # Wait until connected...
     time.sleep(0.1)
 sta.config(pm=sta.PM_NONE)  # ..then disable power saving
 
-time.sleep(2)
-
 print("Proxy running on channel:", sta.config("channel"))
 
 ap.active(True) # ESP8266 peers must send messages to this AP_IF interface
